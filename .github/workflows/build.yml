@@ -15,9 +15,9 @@ jobs:
         build_type: [RelWithDebInfo, Debug]
         enable_ui: [off]
         include:
-          - os: ubuntu-latest
-            build_type: Debug
-            enable_ui: on
+          - os: windows-latest
+            build_type: RelWithDebInfo
+            enable_ui: off
     steps:
     - uses: actions/checkout@v4
       with:
@@ -55,7 +55,8 @@ jobs:
           -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 \
           -DENABLE_TESTS=ON \
           -DENABLE_UI=${{ matrix.enable_ui }} \
-          -DENABLE_CCACHE=$enable_ccache
+          -DENABLE_CCACHE=$enable_ccache \
+          -DWIN32=ON # To specify Windows build
     - name: Compiling
       shell: bash
       run: |
@@ -64,7 +65,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build
-        path: build
+        path: build/bin # Change artifact upload path to build/bin
     - name: Running C++ Tests
       shell: bash
       run: |
